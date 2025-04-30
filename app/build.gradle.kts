@@ -1,6 +1,10 @@
+import com.android.build.api.dsl.AaptOptions
+import com.android.build.api.dsl.AndroidResources
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-kapt")
 }
 
 android {
@@ -47,13 +51,34 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
 
+    //Bottombar
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.compose.material:material-icons-extended")
+
+    //Database ROOM
+    implementation("com.google.code.gson:gson:2.10.1")
+    val roomVersion = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    //Map
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
     // PyTorch Mobile
     implementation("org.pytorch:pytorch_android:1.13.1")
     implementation("org.pytorch:pytorch_android_torchvision:1.13.1")
+
+    // TfLite
+    implementation ("org.tensorflow:tensorflow-lite:2.13.0")
+    implementation ("org.tensorflow:tensorflow-lite-support:0.4.3")
+    implementation ("org.tensorflow:tensorflow-lite-gpu:2.13.0") // GPU desteği için (isteğe bağlı)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
