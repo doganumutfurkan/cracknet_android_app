@@ -36,6 +36,20 @@ class DetectionViewModel(
     private val _editDetection = MutableStateFlow<DetectionResult?>(null)
     val editDetection: StateFlow<DetectionResult?> = _editDetection
 
+    private val _detectionList = MutableStateFlow<List<DetectionResult>>(emptyList())
+    val detectionList: StateFlow<List<DetectionResult>> = _detectionList
+
+    init {
+        refreshDetections()
+    }
+
+    fun refreshDetections() {
+        viewModelScope.launch {
+            _detectionList.value = repository.getAllDetections()
+        }
+    }
+
+
     fun setSelectedImageUri(uri: Uri?) {
         _selectedImageUri.value = uri
     }
@@ -100,6 +114,7 @@ class DetectionViewModel(
     fun deleteDetection(detection: DetectionResult, onComplete: () -> Unit) {
         viewModelScope.launch {
             repository.deleteDetection(detection)
+            refreshDetections()
             onComplete()
         }
     }
@@ -113,7 +128,20 @@ class DetectionViewModel(
     fun updateDetection(updated: DetectionResult, onComplete: () -> Unit) {
         viewModelScope.launch {
             repository.updateDetection(updated)
+            refreshDetections()
             onComplete()
+        }
+    }
+
+    fun insertDetection(detection: DetectionResult, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        viewModelScope.launch {
+            try {
+                repository.insertDetection(detection)
+                refreshDetections()
+                onSuccess()
+            } catch (e: Exception) {
+                onError(e)
+            }
         }
     }
 
