@@ -152,7 +152,6 @@ class MainActivity : ComponentActivity() {
                         }
 
                         DetectionSaveScreen(
-                            navController = navController,
                             imagePath = imagePath,
                             detections = detections,
                             onSave = { detection ->
@@ -160,6 +159,7 @@ class MainActivity : ComponentActivity() {
                                     detection = detection,
                                     onSuccess = {
                                         Toast.makeText(this@MainActivity, "Kayıt başarılı", Toast.LENGTH_SHORT).show()
+                                        viewModel.clearDetectionState()
                                         navController.navigate("detection") {
                                             popUpTo("detection") { inclusive = true }
                                         }
@@ -168,6 +168,12 @@ class MainActivity : ComponentActivity() {
                                         Toast.makeText(this@MainActivity, "Kayıt hatası: ${it.message}", Toast.LENGTH_LONG).show()
                                     }
                                 )
+                            },
+                            onDiscard = {
+                                viewModel.clearDetectionState()
+                                navController.navigate("detection") {
+                                    popUpTo("detection") { inclusive = true }
+                                }
                             }
                         )
                     }

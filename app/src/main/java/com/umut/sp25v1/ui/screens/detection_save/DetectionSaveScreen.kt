@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.umut.sp25v1.data.model.DetectionResult
 import com.umut.sp25v1.data.model.TempDetection
@@ -25,10 +24,10 @@ import java.io.File
 
 @Composable
 fun DetectionSaveScreen(
-    navController: NavController,
     imagePath: String,
     detections: List<TempDetection>,
-    onSave: (DetectionResult) -> Unit
+    onSave: (DetectionResult) -> Unit,
+    onDiscard: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -138,9 +137,7 @@ fun DetectionSaveScreen(
 
         Button(
             onClick = {
-                navController.navigate("detection") {
-                    popUpTo("detection") { inclusive = true }
-                }
+                onDiscard()
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
             modifier = Modifier.fillMaxWidth()

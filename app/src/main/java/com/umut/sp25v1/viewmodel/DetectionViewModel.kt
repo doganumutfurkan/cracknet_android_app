@@ -151,4 +151,9 @@ class DetectionViewModel(
     fun resetNavigation() {
         _uiState.update { it.copy(shouldNavigate = false) }
     }
+
+    fun clearDetectionState() {
+        _selectedImageUri.value = null
+        _uiState.value = DetectionUiState()
+    }
 }
