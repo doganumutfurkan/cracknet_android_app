@@ -158,13 +158,13 @@ class MainActivity : ComponentActivity() {
                                 viewModel.insertDetection(
                                     detection = detection,
                                     onSuccess = {
-                                        Toast.makeText(this, "Kayıt başarılı", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@MainActivity, "Kayıt başarılı", Toast.LENGTH_SHORT).show()
                                         navController.navigate("detection") {
                                             popUpTo("detection") { inclusive = true }
                                         }
                                     },
                                     onError = {
-                                        Toast.makeText(this, "Kayıt hatası: ${it.message}", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(this@MainActivity, "Kayıt hatası: ${it.message}", Toast.LENGTH_LONG).show()
                                     }
                                 )
                             }
