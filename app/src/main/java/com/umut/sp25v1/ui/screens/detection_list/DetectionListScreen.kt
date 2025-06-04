@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.umut.sp25v1.data.model.DetectionResult
 import android.net.Uri
@@ -40,6 +41,7 @@ fun DetectionListScreen(
     onItemClick: (DetectionResult) -> Unit
 ) {
     val detectionList by viewModel.detectionList.collectAsState()
+    LaunchedEffect(Unit) { viewModel.refreshDetections() }
 
     Scaffold(
         topBar = {

@@ -36,7 +36,7 @@ import java.io.File
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var tflite: Interpreter
+    private val tflite: Interpreter by lazy { Interpreter(loadTFLiteModel()) }
     private lateinit var photoUri: Uri
     private lateinit var galleryLauncher: ActivityResultLauncher<String>
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
@@ -44,15 +44,15 @@ class MainActivity : ComponentActivity() {
     private val viewModel: DetectionViewModel by viewModels {
         DetectionViewModelFactory(
             DetectionRepository(
-                DetectionDatabase.getDatabase(applicationContext).detectionResultDao()
-            )
+                DetectionDatabase.getDatabase(applicationContext).detectionResultDao(),
+            ),
+            tflite
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        tflite = Interpreter(loadTFLiteModel())
 
 
         galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
                             detectionId = id,
                             viewModel = viewModel,
                             onBack = { navController.popBackStack() },
-                            onSave = { navController.popBackStack() }
+                            onSave = { _ -> navController.popBackStack() }
                         )
                     }
 

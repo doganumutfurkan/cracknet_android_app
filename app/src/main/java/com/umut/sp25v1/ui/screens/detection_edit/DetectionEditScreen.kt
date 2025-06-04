@@ -18,7 +18,6 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavController
 import com.umut.sp25v1.viewmodel.DetectionViewModel
 import java.io.File
 
@@ -28,7 +27,8 @@ import java.io.File
 fun DetectionEditScreen(
     detectionId: Long,
     viewModel: DetectionViewModel,
-    navController: NavController
+    onBack: () -> Unit,
+    onSave: (DetectionResult) -> Unit
 ) {
     val detection by viewModel.editDetection.collectAsState()
 
@@ -47,7 +47,7 @@ fun DetectionEditScreen(
                 TopAppBar(
                     title = { Text("Tespiti Düzenle") },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = onBack) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Geri")
                         }
                     }
@@ -113,7 +113,7 @@ fun DetectionEditScreen(
                             longitude = lon.toDoubleOrNull()
                         )
                         viewModel.updateDetection(updated) {
-                            navController.popBackStack()
+                            onSave(updated)
                         }
                     },
                     modifier = Modifier.fillMaxWidth()

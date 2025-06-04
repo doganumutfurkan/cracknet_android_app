@@ -19,7 +19,7 @@ import com.umut.sp25v1.data.model.DetectionResult
 import com.umut.sp25v1.data.model.TempDetection
 import java.text.SimpleDateFormat
 import java.util.*
-import com.umut.sp25v1.MainActivity
+import com.umut.sp25v1.utils.getCurrentLocation
 import java.io.File
 
 
@@ -28,7 +28,7 @@ fun DetectionSaveScreen(
     navController: NavController,
     imagePath: String,
     detections: List<TempDetection>,
-    insertDetection: (DetectionResult) -> Unit
+    onSave: (DetectionResult) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -39,7 +39,7 @@ fun DetectionSaveScreen(
     var longitude by remember { mutableStateOf<Double?>(null) }
 
     LaunchedEffect(Unit) {
-        (context as? MainActivity)?.getCurrentLocation { lat, lon ->
+        getCurrentLocation(context) { lat, lon ->
             latitude = lat
             longitude = lon
         }
@@ -127,7 +127,7 @@ fun DetectionSaveScreen(
                     damageType = damageType,
                     userRating = 0
                 )
-                insertDetection(entity)
+                onSave(entity)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
