@@ -56,6 +56,13 @@ android {
 
 dependencies {
 
+    implementation ("org.tensorflow:tensorflow-lite:2.12.0")
+    implementation ("org.tensorflow:tensorflow-lite-select-tf-ops:2.12.0")
+
+
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+
     //Bottombar
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.material:material-icons-extended")
@@ -70,6 +77,9 @@ dependencies {
 
     //Map
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
 
     // PyTorch Mobile
     implementation("org.pytorch:pytorch_android:1.13.1")
