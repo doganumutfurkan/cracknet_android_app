@@ -43,6 +43,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.umut.sp25v1.data.model.DetectionResult
+import com.umut.sp25v1.viewmodel.DetectionViewModel
 import com.umut.sp25v1.utils.bitmapDescriptorFromColor
 import kotlinx.coroutines.launch
 
@@ -50,12 +51,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
-    detectionResults: List<DetectionResult>,
+    viewModel: DetectionViewModel,
     onPinClick: (DetectionResult) -> Unit,
     onBack: () -> Unit,
     initialLocation: LatLng? = null
 ) {
-    val detectionList by viewModel.detectionList.collectAsState()
+    val detectionResults by viewModel.detectionList.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.refreshDetections()
+    }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
