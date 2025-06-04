@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.remember
 import androidx.core.content.FileProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.*

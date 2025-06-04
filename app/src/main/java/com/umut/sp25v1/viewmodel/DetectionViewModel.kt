@@ -133,7 +133,10 @@ class DetectionViewModel(
         }
     }
 
-    fun insertDetection(detection: DetectionResult, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    fun insertDetection(
+        detection: DetectionResult,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit) {
         viewModelScope.launch {
             try {
                 repository.insertDetection(detection)
