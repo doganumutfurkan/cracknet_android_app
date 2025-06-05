@@ -1,5 +1,7 @@
 package com.umut.sp25v1.viewmodel
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -68,32 +70,45 @@ class DetectionViewModel(
             try {
                 _uiState.update { it.copy(isProcessing = true, errorMessage = null) }
 
-                val inputStream = context.contentResolver.openInputStream(uri)
-                val sourceBitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream?.close()
+                val resultData = withContext(Dispatchers.Default) {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val sourceBitmap = BitmapFactory.decodeStream(inputStream)
+                    inputStream?.close()
 
-                if (sourceBitmap == null) {
-                    _uiState.update { it.copy(errorMessage = "Görsel okunamadı", isProcessing = false) }
-                    return@launch
-                }
-
-                val input = preprocessTFLite(sourceBitmap, 640)
-                val output = Array(1) { Array(6) { FloatArray(8400) } }
-                tflite.run(input, output)
-
-                val flatOutput = FloatArray(6 * 8400)
-                for (i in 0 until 8400) {
-                    for (j in 0 until 6) {
-                        flatOutput[i * 6 + j] = output[0][j][i]
+                    if (sourceBitmap == null) {
+                        return@withContext null
                     }
+
+                    val input = preprocessTFLite(sourceBitmap, 640)
+                    val output = Array(1) { Array(6) { FloatArray(8400) } }
+                    tflite.run(input, output)
+
+                    val flatOutput = FloatArray(6 * 8400)
+                    for (i in 0 until 8400) {
+                        for (j in 0 until 6) {
+                            flatOutput[i * 6 + j] = output[0][j][i]
+                        }
+                    }
+
+
+                    val result = drawTFLiteDetectionsWithInfo(sourceBitmap, flatOutput)
+                    val savedPath = saveBitmapToInternalStorage(context, result.bitmap)
+
+                    val tempDetections =
+                        result.classes.zip(result.confidences).map { (label, conf) ->
+                            TempDetection(label, conf)
+                        }
+
+                    Pair(savedPath, tempDetections)
+
                 }
 
-                val result = drawTFLiteDetectionsWithInfo(sourceBitmap, flatOutput)
-                val savedPath = saveBitmapToInternalStorage(context, result.bitmap)
-
-                val tempDetections = result.classes.zip(result.confidences).map { (label, conf) ->
-                    TempDetection(label, conf)
+            if (resultData == null) {
+                _uiState.update { it.copy(errorMessage = "Görsel okunamadı", isProcessing = false) }
+                return@launch
                 }
+
+            val (savedPath, tempDetections) = resultData
 
                 _uiState.update {
                     it.copy(
