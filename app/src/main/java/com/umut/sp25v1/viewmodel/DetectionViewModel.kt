@@ -52,6 +52,9 @@ class DetectionViewModel(
 
     fun setSelectedImageUri(uri: Uri?) {
         _selectedImageUri.value = uri
+        if (uri != null) {
+            _uiState.update { it.copy(isProcessing = true) }
+        }
     }
 
     fun runDetection(uri: Uri, context: Context) {

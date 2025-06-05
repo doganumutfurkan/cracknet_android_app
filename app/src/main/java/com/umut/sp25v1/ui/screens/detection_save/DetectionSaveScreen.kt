@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import android.widget.Toast
 import coil.compose.rememberAsyncImagePainter
 import com.umut.sp25v1.data.model.DetectionResult
 import com.umut.sp25v1.data.model.TempDetection
@@ -126,7 +127,12 @@ fun DetectionSaveScreen(
                     damageType = damageType,
                     userRating = 0
                 )
-                onSave(entity)
+                try {
+                    onSave(entity)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Kaydetme hatası: ${'$'}{e.message}", Toast.LENGTH_LONG).show()
+                    isSaving = false
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
