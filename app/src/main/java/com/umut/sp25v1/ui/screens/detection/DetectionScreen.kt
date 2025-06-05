@@ -20,7 +20,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.google.gson.Gson
 import com.umut.sp25v1.R
 import com.umut.sp25v1.viewmodel.DetectionViewModel
-import com.umut.sp25v1.data.model.TempDetection
 
 @Composable
 fun DetectionScreen(
