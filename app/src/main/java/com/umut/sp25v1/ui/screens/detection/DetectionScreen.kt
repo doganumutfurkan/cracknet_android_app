@@ -32,7 +32,7 @@ fun DetectionScreen(
     navigateToMap: () -> Unit
 ) {
     val context = LocalContext.current
-    val selectedUri by viewModel.selectedImageUri.collectAsState()
+    val selectedUri by viewModel.selectedImageUri.collectAsState(initial = null)
     val uiState by viewModel.uiState.collectAsState()
 
     // Seçilen URI değiştiğinde model çalıştır

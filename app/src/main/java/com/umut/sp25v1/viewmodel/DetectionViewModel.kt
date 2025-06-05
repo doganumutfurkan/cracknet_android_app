@@ -13,8 +13,11 @@ import com.umut.sp25v1.inference.drawTFLiteDetectionsWithInfo
 import com.umut.sp25v1.inference.preprocessTFLite
 import com.umut.sp25v1.ui.screens.detection.DetectionUiState
 import com.umut.sp25v1.utils.saveBitmapToInternalStorage
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
@@ -24,8 +27,8 @@ class DetectionViewModel(
     private val tflite: Interpreter
 ) : ViewModel() {
 
-    private val _selectedImageUri = MutableStateFlow<Uri?>(null)
-    val selectedImageUri: StateFlow<Uri?> = _selectedImageUri
+    private val _selectedImageUri = MutableSharedFlow<Uri?>(replay = 1)
+    val selectedImageUri: SharedFlow<Uri?> = _selectedImageUri.asSharedFlow()
 
     private val _uiState = MutableStateFlow(DetectionUiState())
     val uiState: StateFlow<DetectionUiState> = _uiState
@@ -51,7 +54,10 @@ class DetectionViewModel(
 
 
     fun setSelectedImageUri(uri: Uri?) {
-        _selectedImageUri.value = uri
+        viewModelScope.launch {
+            // Emit new selection even if the URI is the same as before
+            _selectedImageUri.emit(uri)
+        }
         if (uri != null) {
             _uiState.update { it.copy(isProcessing = true) }
         }
@@ -156,7 +162,7 @@ class DetectionViewModel(
     }
 
     fun clearDetectionState() {
-        _selectedImageUri.value = null
+        viewModelScope.launch { _selectedImageUri.emit(null) }
         _uiState.value = DetectionUiState()
     }
 }
