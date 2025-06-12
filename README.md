@@ -71,12 +71,8 @@ app/src/main/assets/tflite_model/final_float32.tflite
 
 ### Google Maps API Key
 
-You should add your API key to "YOUR_API_KEY" in androidmanifest.xml file.
-```
-<meta-data
-    android:name="com.google.android.geo.API_KEY"
-    android:value="YOUR_API_KEY" />
-```
+You should add your API key to "YOUR_API_KEY_HERE" in google_maps_api.xml file.
+
 ### Customizing the Model
 You can replace the model with your own .tflite file:
 
