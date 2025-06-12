@@ -6,6 +6,12 @@ CrackNet is an Android mobile application that performs **real-time surface crac
 
 ---
 
+## Screen Shots
+
+![Main Page](https://imgur.com/fNY3IUi.png)
+![Map Screen](https://imgur.com/uneVqwN.png)
+![Detection List Screen](https://imgur.com/N4ayj9u.png)
+
 ## 📱 Features
 
 - 📸 **Camera and Gallery Support**  
